@@ -2,8 +2,8 @@ import React from "react";
 import { Container, H2, BooksList } from "./styles.js";
 import Book from "../Book";
 
-const BooksContainer = ({ books, pickBook }) => (
-  <Container>
+const BooksContainer = ({ books, pickBook, isPanelOpen }) => (
+  <Container $isPanelOpen={isPanelOpen}>
     <H2>All Books</H2>
     <BooksList>
       {books.map((book) => (

@@ -3,7 +3,8 @@ import styled from "styled-components";
 export const Container = styled.div`
   background-color: #a7e1f8;
   padding: 160px 40px;
-  overflow: scroll;
+  overflow: ${({ $isPanelOpen }) => ($isPanelOpen ? "hidden" : "scroll")};
+  position: ${({ $isPanelOpen }) => ($isPanelOpen ? "fixed" : "unset")};
 
   @media (max-width: 800px) {
     padding: 114px 20px;
@@ -12,7 +13,7 @@ export const Container = styled.div`
 
 export const H2 = styled.div`
   font-size: 42px;
-  font-weight: bold; 
+  font-weight: bold;
   margin: 0 0 10px 0;
 
   @media (max-width: 800px) {

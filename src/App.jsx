@@ -4,6 +4,7 @@ import BooksContainer from "./components/BooksContainer";
 import Header from "./components/Header";
 import { GlobalStyle } from "./styles";
 import DetailPanel from "./components/DetailsPanel";
+import { Transition } from "react-transition-group";
 
 const App = () => {
   // *1
@@ -11,6 +12,7 @@ const App = () => {
   //get selected book from list. Initial state is null as book is not selected
   const [selectedBook, setSelectedBook] = useState(null);
   //console.log("This message is going to load every time the component renders.");
+  const [showPanel, setShowPanel] = useState(false);
 
   useEffect(() => {
     //*3
@@ -19,7 +21,6 @@ const App = () => {
         //anything that comes next, after the await fetch, is suspended untill the return promise is complete
         const response = await fetch("https://book-club-json.herokuapp.com/books");
         //console.log("Here is what our fetch request returns", response);
-
         const books = await response.json();
         //console.log("Our json-ified response:", books);
         setBooks(books);
@@ -34,6 +35,12 @@ const App = () => {
 
   const pickBook = (book) => {
     setSelectedBook(book);
+    setShowPanel(true);
+  };
+
+  const closePanel = () => {
+    //*5
+    setShowPanel(false);
   };
 
   console.log(selectedBook);
@@ -43,9 +50,12 @@ const App = () => {
     <>
       <GlobalStyle />
       <Header />
-      <BooksContainer books={books} pickBook={pickBook} />
-      {/* *4 */}
-      {selectedBook && <DetailPanel book={selectedBook} />};
+      <BooksContainer books={books} pickBook={pickBook} isPanelOpen={showPanel} />
+      {/* *6 */}
+      <Transition in={showPanel} timeout={300}>
+        {/* *4 */}
+        {(state) => <DetailPanel book={selectedBook} closePanel={closePanel} state={state} />};
+      </Transition>
     </>
   );
 };
@@ -98,7 +108,17 @@ which will then cause the same set of actions to happen over and over again.
 }, []); */
 
 /* *4
-We get an error here if we just run DetailPanel component with no validation.
-selectedBook is set to null by default, so the component would not be able to render. we will use this bool expression
-to check if a book has been selected. If selectedBook = true (&&), render the DetailPanel component
-if not do not render the DetailPanel component */
+~ We're going to define state as an argument and then we're going to move the detail panel component
+~ so that it's now inside the function body and we're going to create a prop for it called state */
+
+/* *5
+~ And instead of setting the selected book to null, we're just going to set the set show panel function value back to false. 
+~ This is because if we remove the book while the panel is still closing, 
+~ it's going to be sort of an awkward animation because you're going to see the book disappear */
+
+/* *6
+~ Transition component doesn't alter the behavior of the component itself and it only tracks the enter and exit states for the component
+~ Add an in prop. This is what's going to toggle the transition state. 
+~ When the in props value evaluates to true, then the detail panel will begin its enter stage
+~ Timeout = duration of transition
+ */
