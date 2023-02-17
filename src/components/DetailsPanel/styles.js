@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Pill } from "../../styles";
 
 export const Panel = styled.article`
   background-color: #ffe581;
@@ -28,6 +29,7 @@ export const Panel = styled.article`
     /* right now the panel's going to slide in from both the right and the bottom. */
     /* unset the right rule because we want the panel to only slide in from the bottom vertically */
     right: unset;
+    z-index: 3;
   }
 `;
 
@@ -42,47 +44,10 @@ export const Em = styled.em`
   font-style: italic;
 `;
 
-export const Close = styled.button`
-  background: none;
-  border: 0;
-  cursor: pointer;
-  height: 24px;
-  width: 24px;
-  padding: 0;
-  position: relative;
-
-  /* create the x icon */
-  &::before,
-  &::after {
-    background-color: #000;
-    content: "";
-    height: 24px;
-    width: 2px;
-    position: absolute;
-    top: 0;
-    left: 9px;
-  }
-
-  &::before {
-    transform: rotate(45deg);
-  }
-
-  &::after {
-    transform: rotate(-45deg);
-  }
-`;
-
-export const CloseWrapper = styled.div`
-  background: #a7e1f8;
-  border: 2px solid #000;
-  border-radius: 30px;
-  height: 20px;
-  width: 20px;
+export const CloseWrapper = styled(Pill)`
   padding: 8px;
-  display: ${({ $state }) => ($state === "entering" ? "flex" : "none")};
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
+  display: ${({ $state }) => ($state === "entered" ? "flex" : "none")};
+
   cursor: pointer;
   top: 120px;
   right: 40px;

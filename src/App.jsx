@@ -4,6 +4,7 @@ import BooksContainer from "./components/BooksContainer";
 import Header from "./components/Header";
 import { GlobalStyle } from "./styles";
 import DetailPanel from "./components/DetailsPanel";
+import Search from "./components/Search";
 import { Transition } from "react-transition-group";
 
 const App = () => {
@@ -13,6 +14,7 @@ const App = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   //console.log("This message is going to load every time the component renders.");
   const [showPanel, setShowPanel] = useState(false);
+  const [filteredBooks, setFilteredBooks] = useState([]);
 
   useEffect(() => {
     //*3
@@ -24,8 +26,9 @@ const App = () => {
         const books = await response.json();
         //console.log("Our json-ified response:", books);
         setBooks(books);
+        setFilteredBooks(books);
       } catch (errors) {
-        console.log(errors);
+        //console.log(errors);
       }
     };
 
@@ -43,18 +46,47 @@ const App = () => {
     setShowPanel(false);
   };
 
-  console.log(selectedBook);
-  console.log("the books array in our state: ", books);
+  const filterBooks = (searchTerm) => {
+    const stringSearch = (bookAttribute, searchTerm) =>
+      bookAttribute.toLowerCase().includes(searchTerm.toLowerCase());
+
+    if (!searchTerm) {
+      setFilteredBooks(books);
+    } else {
+      //compare each book title/author to the search term
+      setFilteredBooks(
+        books.filter(
+          (book) => stringSearch(book.title, searchTerm) || stringSearch(book.author, searchTerm)
+          /*        book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          book.author.toLowerCase().includes(searchTerm.toLowerCase()) */
+        )
+      );
+    }
+  };
+
+  const hasFiltered = filterBooks.length !== books.length;
+
+  //console.log(filterBooks(null));
+  //console.log(filterBooks("Octavia"));
+  //console.log(selectedBook);
+  //console.log("the books array in our state: ", books);
   //books prop for the bookscontainer component and pass books value from the state variable
   return (
     <>
       <GlobalStyle />
-      <Header />
-      <BooksContainer books={books} pickBook={pickBook} isPanelOpen={showPanel} />
+      <Header>
+        <Search filterBooks={filterBooks} />
+      </Header>
+      <BooksContainer
+        books={filteredBooks}
+        pickBook={pickBook}
+        isPanelOpen={showPanel}
+        title={hasFiltered ? "Search results" : "All books"}
+      />
       {/* *6 */}
       <Transition in={showPanel} timeout={300}>
         {/* *4 */}
-        {(state) => <DetailPanel book={selectedBook} closePanel={closePanel} state={state} />};
+        {(state) => <DetailPanel book={selectedBook} closePanel={closePanel} state={state} />}
       </Transition>
     </>
   );

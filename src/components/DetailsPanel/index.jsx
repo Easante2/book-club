@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
-import { Panel, P, Em, Close, CloseWrapper, BG } from "./styles";
+import { Panel, P, Em, CloseWrapper, BG } from "./styles";
+import { Close } from "../../styles";
 import Book from "../Book";
 
 const DetailPanel = ({ book, closePanel, state }) => {
@@ -12,7 +13,6 @@ const DetailPanel = ({ book, closePanel, state }) => {
     }
   }, [book, prevBook]);
 
-  console.log(state);
   return (
     <>
       {/* *1 */}
