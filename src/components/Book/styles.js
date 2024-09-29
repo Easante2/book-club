@@ -1,7 +1,10 @@
 import styled from "styled-components";
 
 export const Container = styled.figure`
-  cursor: pointer;
+  /* cursor: pointer; */
+  /* if cursor is on main page, cursor is set to default,
+   if cursor is on side panel, set cursor to pointer */
+  cursor: ${({ $isLarge }) => ($isLarge ? "default" : "pointer")};
   margin: 0;
 `;
 
@@ -17,9 +20,15 @@ export const Cover = styled.img`
 `;
 
 export const Title = styled.h3`
-  font-size: 28px;
+  /* font-size: 28px; */
+  /* through transient prop isLarge, change the text size if cursor is on side panel */
+  font-size: ${({ $isLarge }) => ($isLarge ? "40px" : "24px")};
   margin: 0px 0px 5px 0;
   line-height: 1.3;
+
+  @media (max-width: 800px) {
+    font-size: ${({ $isLarge }) => ($isLarge ? "32px" : "22px")};
+  }
 `;
 
 export const Author = styled.h4`
